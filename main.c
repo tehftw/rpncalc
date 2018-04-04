@@ -6,6 +6,7 @@
  *	Interactive mode(display stack and wait for user input)
  *		Interactive+ - remember the whole history of input and spit it out for the user to use again if needed
  *	Refactor how functions are read: create a dictionary(key: mnemonic of , value: pointer to function), then each time it will compare function against dictionary
+ *	Add checking of whether it's valid(don't allow non-numbers to be parsed, disallow invalid arguments etc.)
  * */
 
 
@@ -18,6 +19,7 @@
 
 #include "dstack.h"
 #include "chstack.h"
+#include "functions.h"
 
 
 const size_t DEFAULT_STK_SIZE = 0x20;
@@ -27,7 +29,6 @@ const size_t DEFAULT_WORDBUF_SIZE = 0x20;
 
 int main(int argc, char **argv)
 {
-	
 	bool verbose = false;
 	if(argc > 1)
 	{
@@ -106,9 +107,10 @@ int main(int argc, char **argv)
 			/* If operation, then operate on doubles from top of dstack */
 			if( strcmp(wordbuf.ptr_zero, add) == 0 ) {
 				if(verbose) printf(" Adding.");
-				double result = dstack_pop(stk);
-				result += dstack_pop(stk);
-				dstack_push(stk, result);
+				calc_applyFunction(stk, calcfunptr_add);
+				//double result = dstack_pop(stk);
+				//result += dstack_pop(stk);
+				//dstack_push(stk, result);
 			} else if (strcmp(wordbuf.ptr_zero, multiply) == 0) {  
 				if( verbose )printf(" Multiply.");
 				double result = dstack_pop(stk);

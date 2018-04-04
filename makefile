@@ -1,2 +1,2 @@
-npmcalc: main.c dstack.c chstack.c
-	gcc main.c dstack.c chstack.c -o npmcalc.o -I . -lm
+npmcalc: main.c dstack.c chstack.c functions.c
+	gcc main.c dstack.c chstack.c functions.c -o npmcalc.o -I . -lm
