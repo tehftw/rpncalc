@@ -12,6 +12,6 @@ struct dstack {
 
 
 struct dstack dstack_wrapArray(double *, size_t);
-double *dstack_getTop(struct dstack*);
 double dstack_pop(struct dstack*);
 void dstack_push(struct dstack*, double);
+void dstack_print(struct dstack*);

@@ -1,5 +1,13 @@
 /* clear && gcc -Wall -g stack.c -lm && ./a.out */
 
+/* TODO:
+ *	Multiple arguments for operators
+ *	'-x'(might not be needed due to the C function that translates numbers) and '1/x'
+ *	Interactive mode(display stack and wait for user input)
+ *		Interactive+ - remember the whole history of input and spit it out for the user to use again if needed
+ *	Refactor how functions are read: create a dictionary(key: mnemonic of , value: pointer to function), then each time it will compare function against dictionary
+ * */
+
 
 
 #include <stdio.h>
@@ -82,6 +90,7 @@ int main(int argc, char **argv)
 	const char *add = "+";
 	const char *multiply = "*";
 	/* One-val */
+	const char *str_inverse = "/";
 	const char *str_exp = "exp";
 	const char *str_logn = "logn";
 
@@ -110,6 +119,16 @@ int main(int argc, char **argv)
 				double result = dstack_pop(stk);
 				result = exp(result);
 				dstack_push(stk, result);
+			} else if(strcmp(wordbuf.ptr_zero, str_inverse) == 0) {
+				if( verbose ) printf("Inverse: ");
+				double result = dstack_pop(stk);
+				result = 1/result;
+				dstack_push(stk, result);
+			} else if(strcmp(wordbuf.ptr_zero, str_logn) == 0 ) {
+				if( verbose ) printf("Logn(): ");
+				double result = dstack_pop(stk);
+				result = log(result);
+				dstack_push(stk, result);
 			} else {
 				if( verbose )printf(" Pushing double onto dstack.");
 				dstack_push( stk, atof(wordbuf.ptr_zero) );
@@ -125,12 +144,8 @@ int main(int argc, char **argv)
 	}
 	
 
-	printf("\n\n\t Result = %f", dstack_pop(stk) );
-
-	if(stk->stptr > 0) printf("\n Other values: ");
-	for(size_t i = stk->stptr; i > 0; i--) {
-		printf("\n %f", dstack_pop(stk));
-	}
+	printf("\n\n Values(from top to bottom of stack):");
+	dstack_print(stk);
 
 	printf("\n\n");
 	return 0;
