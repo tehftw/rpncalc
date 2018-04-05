@@ -1,3 +1,3 @@
 # /bin/bash
 
-clear && make && ./rpncalc.o
+clear && make && ./rpncalc.out

@@ -1,8 +1,11 @@
 #pragma once
 
-#include <stdbool.h>
-#include <string.h>
-#include <assert.h>
+#include <cstdbool>
+#include <cstring>
+#include <cassert>
+
+#include <string>
+using std::string;
 
 #include "dstack.h"
 
@@ -26,15 +29,16 @@ void calc_findAndApplyFunction(struct dstack *, struct CalcFunMap, const char * 
 
 
 
+const string KEY_ADD = "+";
+const string KEY_MULTIPLY = "*";
+const string KEY_INVERSE = "/";
+const string KEY_EXP = "exp";
+const string KEY_LOGN = "logn";
+
 void calc_applyFunction(struct dstack *, CalcFunPtr );
 
 double calcfun_add(struct dstack *);
-char *KEY_ADD;
-const CalcFunPtr calcfunptr_add;
+const CalcFunPtr calcfunptr_add = &calcfun_add;
 
 double calcfun_multiply(struct dstack *);
-char *KEY_MULTIPLY;
 
-char *KEY_INVERSE;
-char *KEY_EXP;
-char *KEY_LOGN;
