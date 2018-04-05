@@ -1,6 +1,10 @@
 #pragma once
-#include "dstack.h"
 
+#include <stdbool.h>
+#include <string.h>
+#include <assert.h>
+
+#include "dstack.h"
 
 typedef double CalcFun(struct dstack *stk); /* Request some values, then spit out the result */
 typedef CalcFun (*CalcFunPtr);
@@ -13,22 +17,24 @@ struct CalcFunction {
 struct CalcFunMap {
 	size_t capacity;
 	size_t num_entries;
-	CalcFun *func;
+	struct CalcFunction *func;
 };
+void calcfunmap_addCalcFunction(struct CalcFunMap *, char *, CalcFunPtr);
+struct CalcFunMap calcfunmap_initialize(CalcFunPtr, size_t);
+CalcFunPtr calcfunmap_findCalcFun(const struct CalcFunMap, const char *);
+void calc_findAndApplyFunction(struct dstack *, struct CalcFunMap, const char * );
 
-const char *KEY_ADD;
-const char *KEY_MULTIPLY;
-const char *KEY_INVERSE;
-const char *KEY_EXP;
-const char *KEY_LOGN;
+
 
 void calc_applyFunction(struct dstack *, CalcFunPtr );
 
 double calcfun_add(struct dstack *);
+char *KEY_ADD;
 const CalcFunPtr calcfunptr_add;
 
 double calcfun_multiply(struct dstack *);
+char *KEY_MULTIPLY;
 
-struct CalcFunMap calcfunmap_initialize(CalcFunPtr, size_t);
-
-void calc_findAndApplyFunction(struct dstack *, struct CalcFunMap, const char * );
+char *KEY_INVERSE;
+char *KEY_EXP;
+char *KEY_LOGN;
