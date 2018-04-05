@@ -7,6 +7,8 @@
  *		Interactive+ - remember the whole history of input and spit it out for the user to use again if needed
  *	Refactor how functions are read: create a dictionary(key: mnemonic of , value: pointer to function), then each time it will compare function against dictionary
  *	Add checking of whether it's valid(don't allow non-numbers to be parsed, disallow invalid arguments etc.)
+ *
+ *	Switch to C++ standard containers(stack, map)
  * */
 
 
@@ -39,7 +41,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-
+	bool is_interactive = true;
 
 
 	printf("\n\tUNFINISHED\n");
@@ -63,91 +65,98 @@ int main(int argc, char **argv)
 
 
 	/* Some basic-ass reverse polish notation calculator */
-	// Saving input
-	char input_buffer[buf_size+1];
-	struct chstack inbuf = chstack_wrapArray(input_buffer, sizeof(input_buffer));
-	input_buffer[buf_size] = '\0'; // to ensure it's always delimited
-	int input_character;
-	do {
-		input_character = getchar();
-		chstack_push(&inbuf, input_character);
-		//printf("\ninput_buffer[%zu] = %c", buf_len, input_buffer[buf_len]);
-	} while(input_character != EOF  &&
-			input_character != '\n' &&
-			inbuf.stptr < inbuf.capacity);
-	chstack_push(&inbuf, '\0');
-
-	printf("\n Stored buffer: '%s'", input_buffer);
 
 
+	printf("\nInteractive mode online.\n"); /* write 'quit' or 'exit' to stop."); */
 
+	/* main loop */
+	while(is_interactive) {
+		printf("\n\n");
+		// Saving input
+		char input_buffer[buf_size+1];
+		struct chstack inbuf = chstack_wrapArray(input_buffer, sizeof(input_buffer));
+		input_buffer[buf_size] = '\0'; // to ensure it's always delimited
+		int input_character;
+		do {
+			input_character = getchar();
+			chstack_push(&inbuf, input_character);
+			//printf("\ninput_buffer[%zu] = %c", buf_len, input_buffer[buf_len]);
+		} while(input_character != EOF  &&
+				input_character != '\n' &&
+				inbuf.stptr < inbuf.capacity);
+		chstack_push(&inbuf, '\0');
 
-	/* Read through the input and do operations: */
-	char wordbuf_array[wordbuf_size+1];
-	struct chstack wordbuf = chstack_wrapArray( wordbuf_array, sizeof(wordbuf_array) );
-	chstack_makeEmpty(&wordbuf);
-	const char delimiter = ' ';
-	/* Two-val */
-	const char *add = "+";
-	const char *multiply = "*";
-	/* One-val */
-	const char *str_inverse = "/";
-	const char *str_exp = "exp";
-	const char *str_logn = "logn";
+		printf("\n Stored buffer: '%s'", input_buffer);
 
-	if( verbose )printf("\n inbuf.stptr = %zu", inbuf.stptr);
-	for(size_t i = 0; i < inbuf.stptr; i++) {
-		/* If char = delimiter, then stop gathering more, 
-		 * operate on the current word,
-		 * and clear the word_buffer */
-		char in = *(inbuf.ptr_zero + i);
-		if( in == ' ' || in == '\n' || '\0' ) {
-			if( verbose ) printf("\n Word: '%s'", wordbuf.ptr_zero);
-			chstack_push(&wordbuf, '\0');
-			/* If operation, then operate on doubles from top of dstack */
-			if( strcmp(wordbuf.ptr_zero, add) == 0 ) {
-				if(verbose) printf(" Adding.");
-				calc_applyFunction(stk, calcfunptr_add);
-				//double result = dstack_pop(stk);
-				//result += dstack_pop(stk);
-				//dstack_push(stk, result);
-			} else if (strcmp(wordbuf.ptr_zero, multiply) == 0) {  
-				if( verbose )printf(" Multiply.");
-				double result = dstack_pop(stk);
-				result *= dstack_pop(stk);
-				dstack_push(stk, result);
-			} else if (strcmp(wordbuf.ptr_zero, str_exp) == 0) {
-				if( verbose )printf(" Exp() function.");
-				double result = dstack_pop(stk);
-				result = exp(result);
-				dstack_push(stk, result);
-			} else if(strcmp(wordbuf.ptr_zero, str_inverse) == 0) {
-				if( verbose ) printf("Inverse: ");
-				double result = dstack_pop(stk);
-				result = 1/result;
-				dstack_push(stk, result);
-			} else if(strcmp(wordbuf.ptr_zero, str_logn) == 0 ) {
-				if( verbose ) printf("Logn(): ");
-				double result = dstack_pop(stk);
-				result = log(result);
-				dstack_push(stk, result);
+		/* Read through the input and do operations: */
+		char wordbuf_array[wordbuf_size+1];
+		struct chstack wordbuf = chstack_wrapArray( wordbuf_array, sizeof(wordbuf_array) );
+		chstack_makeEmpty(&wordbuf);
+		const char delimiter = ' ';
+		/* Two-val */
+		const char *add = "+";
+		const char *multiply = "*";
+		/* One-val */
+		const char *str_inverse = "/";
+		const char *str_exp = "exp";
+		const char *str_logn = "logn";
+
+		if( verbose )printf("\n inbuf.stptr = %zu", inbuf.stptr);
+		for(size_t i = 0; i < inbuf.stptr; i++) {
+			/* If char = delimiter, then stop gathering more, 
+			 * operate on the current word,
+			 * and clear the word_buffer */
+			char in = *(inbuf.ptr_zero + i);
+			if( in == ' ' || in == '\n' || '\0' ) {
+				if( verbose ) printf("\n Word: '%s'", wordbuf.ptr_zero);
+				chstack_push(&wordbuf, '\0');
+				/* If operation, then operate on doubles from top of dstack */
+				if( strcmp(wordbuf.ptr_zero, "quit") == 0 ) {
+					is_interactive = false;
+				} else if( strcmp(wordbuf.ptr_zero, add) == 0 ) {
+					if(verbose) printf(" Adding.");
+					calc_applyFunction(stk, calcfunptr_add);
+					//double result = dstack_pop(stk);
+					//result += dstack_pop(stk);
+					//dstack_push(stk, result);
+				} else if (strcmp(wordbuf.ptr_zero, multiply) == 0) {  
+					if( verbose )printf(" Multiply.");
+					double result = dstack_pop(stk);
+					result *= dstack_pop(stk);
+					dstack_push(stk, result);
+				} else if (strcmp(wordbuf.ptr_zero, str_exp) == 0) {
+					if( verbose )printf(" Exp() function.");
+					double result = dstack_pop(stk);
+					result = exp(result);
+					dstack_push(stk, result);
+				} else if(strcmp(wordbuf.ptr_zero, str_inverse) == 0) {
+					if( verbose ) printf("Inverse: ");
+					double result = dstack_pop(stk);
+					result = 1/result;
+					dstack_push(stk, result);
+				} else if(strcmp(wordbuf.ptr_zero, str_logn) == 0 ) {
+					if( verbose ) printf("Logn(): ");
+					double result = dstack_pop(stk);
+					result = log(result);
+					dstack_push(stk, result);
+				} else {
+					if( verbose )printf(" Pushing double onto dstack.");
+					dstack_push( stk, atof(wordbuf.ptr_zero) );
+				}
+				chstack_makeEmpty(&wordbuf);
+				
 			} else {
-				if( verbose )printf(" Pushing double onto dstack.");
-				dstack_push( stk, atof(wordbuf.ptr_zero) );
+				/* Keep building the word*/
+				if( verbose )printf("\n Pushing '%c' onto wordbuf. ", in);
+				chstack_push(&wordbuf, in);
+				if( verbose )printf(" Word = '%s'", wordbuf.ptr_zero);
 			}
-			chstack_makeEmpty(&wordbuf);
-			
-		} else {
-			/* Keep building the word*/
-			if( verbose )printf("\n Pushing '%c' onto wordbuf. ", in);
-			chstack_push(&wordbuf, in);
-			if( verbose )printf(" Word = '%s'", wordbuf.ptr_zero);
 		}
-	}
-	
+		
 
-	printf("\n\n Values(from top to bottom of stack):");
-	dstack_print(stk);
+		printf("\n\n Values(from top to bottom of stack):");
+		dstack_print(stk);
+	}
 
 	printf("\n\n");
 	return 0;
