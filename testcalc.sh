@@ -1,3 +1,3 @@
 # /bin/bash
 
-clear && make && ./npmcalc.o
+clear && make && ./rpncalc.o
