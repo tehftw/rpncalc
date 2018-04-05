@@ -1,2 +1,2 @@
-rpncalc: main.c dstack.c chstack.c functions.c
-	gcc main.c dstack.c chstack.c functions.c -o rpncalc.o -I . -lm
+rpncalc: main.cpp dstack.cpp chstack.cpp functions.cpp
+	g++ -std=c++11 main.cpp dstack.cpp chstack.cpp functions.cpp -o rpncalc.o -I . -lm
