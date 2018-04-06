@@ -3,29 +3,45 @@
 /* TODO:
  *	Multiple arguments for operators( '1 2 3 +3' -> '(+ 1 2 3)')
  *	'-x'(might not be needed due to the C function that translates numbers)
- *	improve Interactive - remember the whole history of input and spit it out for the user to use again if needed
+ *	improve Interactive - remember the whole history of valid input and spit it out for the user to use again if needed
  *	Refactor how functions are read: create a dictionary(key: mnemonic of , value: pointer to function), then each time it will compare function against dictionary
- *	Add checking of whether it's valid(don't allow non-numbers to be parsed, disallow invalid arguments etc.)
+ *	Add checking of whether it's valid(don't allow non-numbers to be threw onto the stack, disallow invalid arguments etc.)
  *	Switch to C++ standard containers(stack, map)
  *	Add 'readme'
+ *	Fix bug: when inserting whitespace, program pushes double='0' onto stack
+ *	Multiple number-stacks
+ *	Print a list of all available functions
+ *	Multiple usage when receiving a sequence of operands. e.g. buffer="+++" causes it to do addition 3 times
  * */
 
+/*
+TODO calcfuns:
+drop number from top of stack: 'd'/'del'/'drop'
+change the sign of number: '-'
 
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <cmath>
-#include <cstdbool>
+summate/multiplicate multiple numbers
+summation and multiplication over whole stack
+
+*/
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <math.h>
+
 
 #include "dstack.h"
 #include "chstack.h"
 #include "functions.h"
 
 
-const size_t DEFAULT_STK_SIZE = 0x20;
-const size_t DEFAULT_INPUTBUFFER_SIZE = 0x80;
-const size_t DEFAULT_WORDBUF_SIZE = 0x20;
+const size_t DEFAULT_SIZE_NUMBERS_STACK = 0x20;
+const size_t DEFAULT_SIZE_INPUT_STRING = 0x80;
+const size_t DEFAULT_SIZE_CURRENT_WORD_STRING = 0x20;
+const size_t DEFAULT_SIZE_HISTORY_STRING = 0x80;
 
 
 int main(int argc, char **argv)
@@ -43,12 +59,12 @@ int main(int argc, char **argv)
 	bool is_interactive = true;
 
 
+	/* */
 	printf("\n\tUNFINISHED\n");
 	printf("\tA short hack implementation of a stack with numbers of 'double' type.\n");
-	
-	const size_t buf_size = DEFAULT_INPUTBUFFER_SIZE;
-	const size_t wordbuf_size = DEFAULT_WORDBUF_SIZE;
-	const size_t stk_size = DEFAULT_STK_SIZE;
+	const size_t buf_size = DEFAULT_SIZE_INPUT_STRING;
+	const size_t wordbuf_size = DEFAULT_SIZE_CURRENT_WORD_STRING;
+	const size_t stk_size = DEFAULT_SIZE_NUMBERS_STACK;
 	printf("\nStack size = %zu[doubles]; input buffer size = %zu[characters]\n", stk_size, buf_size);
 
 	/* Creating a dstack by wrapping an array */
@@ -110,14 +126,13 @@ int main(int argc, char **argv)
 				if( verbose ) printf("\n Word: '%s'", wordbuf.ptr_zero);
 				chstack_push(&wordbuf, '\0');
 				/* If operation, then operate on doubles from top of dstack */
-				if( strcmp(wordbuf.ptr_zero, "quit") == 0 ) {
+				if(  strcmp(wordbuf.ptr_zero, "quit") == 0	) {
 					is_interactive = false;
 				} else if( strcmp(wordbuf.ptr_zero, add) == 0 ) {
 					if(verbose) printf(" Adding.");
-					calc_applyFunction(stk, calcfunptr_add);
-					//double result = dstack_pop(stk);
-					//result += dstack_pop(stk);
-					//dstack_push(stk, result);
+					double result = dstack_pop(stk);
+					result += dstack_pop(stk);
+					dstack_push(stk, result);
 				} else if (strcmp(wordbuf.ptr_zero, multiply) == 0) {  
 					if( verbose )printf(" Multiply.");
 					double result = dstack_pop(stk);
@@ -139,7 +154,7 @@ int main(int argc, char **argv)
 					result = log(result);
 					dstack_push(stk, result);
 				} else {
-					if( verbose )printf(" Pushing double onto dstack.");
+					if( verbose ) printf(" Pushing double onto dstack.");
 					dstack_push( stk, atof(wordbuf.ptr_zero) );
 				}
 				chstack_makeEmpty(&wordbuf);

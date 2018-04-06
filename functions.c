@@ -1,9 +1,10 @@
 #include "functions.h"
 
 
-
-
-
+const char *const KEY_MULTIPLY = "*";
+const char *const KEY_INVERSE = "/";
+const char *const KEY_EXP = "exp";
+const char *const KEY_LOGN = "logn";
 
 
 

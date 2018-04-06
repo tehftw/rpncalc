@@ -1,14 +1,13 @@
 appname := rpncalc
 
-CXX := clang++
-CXXFLAGS := -std=c++11 -lm -Wall -g
+CC := clang
+CFLAGS := -Wall -lm -g
 
-srcfiles := $(shell find . -name "*.cpp")
-objects := $(patsubst %.cpp, %.o, $(srcfiles))
+
+srcfiles :=  $(wildcard *.c)
+objects := $(patsubst %.c, %.o, $(srcfiles) )
 
 all: $(appname)
 
 $(appname): $(objects)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $(appname) $(objects) $(LDLIBS)
-
-
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(appname) $(objects) $(LDLIBS)

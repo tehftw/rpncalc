@@ -2,7 +2,6 @@
 
 
 
-
 struct dstack dstack_wrapArray(double *darray_zero, size_t arrlen)
 {
 	struct dstack newstk;

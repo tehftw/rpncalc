@@ -1,13 +1,13 @@
 #pragma once
 
-#include <cstdbool>
-#include <cstring>
-#include <cassert>
+#include <stdbool.h>
+#include <string.h>
+#include <assert.h>
 
-#include <string>
-using std::string;
+
 
 #include "dstack.h"
+
 
 typedef double CalcFun(struct dstack *stk); /* Request some values, then spit out the result */
 typedef CalcFun (*CalcFunPtr);
@@ -29,16 +29,13 @@ void calc_findAndApplyFunction(struct dstack *, struct CalcFunMap, const char * 
 
 
 
-const string KEY_ADD = "+";
-const string KEY_MULTIPLY = "*";
-const string KEY_INVERSE = "/";
-const string KEY_EXP = "exp";
-const string KEY_LOGN = "logn";
 
 void calc_applyFunction(struct dstack *, CalcFunPtr );
 
 double calcfun_add(struct dstack *);
-const CalcFunPtr calcfunptr_add = &calcfun_add;
-
 double calcfun_multiply(struct dstack *);
+
+double calcfun_inverse(struct dstack *);
+double calcfun_exp(struct dstack *);
+double calcfun_logn(struct dstack *);
 

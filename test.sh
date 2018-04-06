@@ -1,3 +1,3 @@
 # /bin/bash
 
-clear && make && ./rpncalc.out
+clear && make && cppcheck *.cpp *.c && ./rpncalc.out
