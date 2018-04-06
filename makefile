@@ -1,16 +1,14 @@
+appname := rpncalc
 
-OUT = rpncalc.out
-CPPSOURCES = main.cpp dstack.cpp chstack.cpp functions.cpp
-OBJECTFILES = $(subst .cpp,.o,$(CPPSOURCES))
+CXX := clang++
+CXXFLAGS := -std=c++11 -lm -Wall -g
 
-CPPCOMPILER = clang++
-CPP_COMPILER_FLAGS = -std=c++11 -lm
+srcfiles := $(shell find . -name "*.cpp")
+objects := $(patsubst %.cpp, %.o, $(srcfiles))
 
-GCCFLAGS = -Wall -g
+all: $(appname)
 
-CPPCHECK = cppcheck
-CPPCHECKFLAGS = -q
+$(appname): $(objects)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $(appname) $(objects) $(LDLIBS)
 
 
-rpncalc: $(CPPSOURCES)
-	$(CPPCOMPILER) $(CPP_COMPILER_FLAGS) $(CPPSOURCES) -o $(OUT) -I .
