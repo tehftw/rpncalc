@@ -1,3 +1,8 @@
 # /bin/bash
 
-clear && make && cppcheck *.cpp *.c && ./rpncalc.out
+clear && 
+	cppcheck *.c && 
+	echo ____________________cppcheck on all .c files finished &&
+	make && 
+	echo ____________________build finished &&
+	./rpncalc.out
