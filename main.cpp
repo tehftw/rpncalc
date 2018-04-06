@@ -1,23 +1,22 @@
 /* clear && gcc -Wall -g stack.c -lm && ./a.out */
 
 /* TODO:
- *	Multiple arguments for operators
- *	'-x'(might not be needed due to the C function that translates numbers) and '1/x'
- *	Interactive mode(display stack and wait for user input)
- *		Interactive+ - remember the whole history of input and spit it out for the user to use again if needed
+ *	Multiple arguments for operators( '1 2 3 +3' -> '(+ 1 2 3)')
+ *	'-x'(might not be needed due to the C function that translates numbers)
+ *	improve Interactive - remember the whole history of input and spit it out for the user to use again if needed
  *	Refactor how functions are read: create a dictionary(key: mnemonic of , value: pointer to function), then each time it will compare function against dictionary
  *	Add checking of whether it's valid(don't allow non-numbers to be parsed, disallow invalid arguments etc.)
- *
  *	Switch to C++ standard containers(stack, map)
+ *	Add 'readme'
  * */
 
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <stdbool.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <cstdbool>
 
 #include "dstack.h"
 #include "chstack.h"
