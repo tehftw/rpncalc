@@ -1,11 +1,16 @@
 
-CPPSOURCES = main.cpp dstack.cpp chstack.cpp functions.cpp
 OUT = rpncalc.out
+CPPSOURCES = main.cpp dstack.cpp chstack.cpp functions.cpp
+OBJECTFILES = $(subst .cpp,.o,$(CPPSOURCES))
 
-CC = clang++
-FLAGS = -std=c++11 -lm
+CPPCOMPILER = clang++
+CPP_COMPILER_FLAGS = -std=c++11 -lm
 
 GCCFLAGS = -Wall -g
 
-rpncalc: $(CPPFILES)
-	$(CC) $(FLAGS) $(CPPSOURCES) -o $(OUT) -I .
+CPPCHECK = cppcheck
+CPPCHECKFLAGS = -q
+
+
+rpncalc: $(CPPSOURCES)
+	$(CPPCOMPILER) $(CPP_COMPILER_FLAGS) $(CPPSOURCES) -o $(OUT) -I .
