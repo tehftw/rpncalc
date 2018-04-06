@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <assert.h>
-
+#include <math.h>
 
 
 #include "dstack.h"
@@ -11,6 +11,8 @@
 
 typedef double CalcFun(struct dstack *stk); /* Request some values, then spit out the result */
 typedef CalcFun (*CalcFunPtr);
+
+typedef double (*calcfunPointer)(struct dstack *stk);
 
 struct CalcFunction {
 	char *key;
@@ -32,10 +34,10 @@ void calc_findAndApplyFunction(struct dstack *, struct CalcFunMap, const char * 
 
 void calc_applyFunction(struct dstack *, CalcFunPtr );
 
-double calcfun_add(struct dstack *);
-double calcfun_multiply(struct dstack *);
+void calcfun_add(struct dstack *);
+void calcfun_multiply(struct dstack *);
 
-double calcfun_inverse(struct dstack *);
-double calcfun_exp(struct dstack *);
-double calcfun_logn(struct dstack *);
+void calcfun_inverse(struct dstack *);
+void calcfun_exp(struct dstack *);
+void calcfun_logn(struct dstack *);
 
